@@ -177,51 +177,8 @@ class ImageButton(ButtonBehavior, Image):
 
 
 class Board(RelativeLayout):
-    """
-    Represents the game board and manages its state and appearance.
-
-    Attributes:
-    - cols (int): Number of columns in the game board.
-    - rows (int): Number of rows in the game board.
-    - clicked_cells (list of tuples): List of currently clicked cells during a turn.
-    - clicked_cells_gemtype (list): List of gem types corresponding to clicked cells.
-    - not_clickable_cells_pos (list of tuples): List of positions for cells that are not clickable.
-    - not_clickable_cells_index (list of tuples): List of indices for cells that are not clickable.
-    - confirm_pos (tuple): Position for the confirmation button.
-    - indexes_tokens_to_choose (list of tuples): Indices of tokens available for choosing (when picking a card with the
-        special effect 'take same color').
-    - cell_size (tuple): Size of each cell on the game board (width, height).
-    - index_board (list of lists): Matrix representing the order of filling of cells on the game board.
-    - board_gems (list of lists): Matrix representing the gem types of cells on the game board.
-
-    Methods:
-    - fill: Fill the game board with tokens from the token bag.
-    - update_board: Update the visual appearance of the game board.
-    - draw_board: Draw the game board with gem images.
-    - color_clicked_cells: Color the cells that are currently clicked during a turn.
-    - color_not_clickable_cells: Color the cells that are not clickable during a turn.
-    - color_cells_to_choose: Color the cells containing tokens available for choosing.
-    - color_cells_to_not_choose: Color the cells that do not contain tokens available for choosing.
-    - generate_not_clickable_cells: Generate lists of not-clickable cells based on the current selection.
-    - generate_not_clickable_cells_one_selected: Generate not-clickable cells logic for one selected cell.
-    - generate_not_clickable_cells_one_selected_gold: Generate not-clickable cells logic for one selected gold cell.
-    - generate_not_clickable_cells_two_selected: Generate not-clickable cells logic for two selected cells.
-    - generate_not_clickable_cells_three_selected: Generate not-clickable cells logic for three selected cells.
-    - get_confirmation_index: Get the position for the confirmation button based on the selected cells.
-    - add_confirmation_to_pick: Add the confirmation button to the game board.
-    - confirmation_button_pressed: Event handler for the confirmation button press.
-    - take_token_special_effect: Handle special effects when choosing a token from the board.
-    - on_window_resize: Event handler for window resize.
-    """
 
     def __init__(self, tokenbag=None, **kwargs):
-        """
-        Initializes the Board object.
-
-        Args:
-        - tokenbag: An token bag to fill the board with tokens.
-        - **kwargs: Additional keyword arguments.
-        """
         super(Board, self).__init__(**kwargs)
         self.bind(size=self.on_window_resize)
         self.cols = 5
@@ -251,12 +208,6 @@ class Board(RelativeLayout):
         self.fill(tokenbag)
 
     def fill(self, tokenbag=None):
-        """
-        Fill the game board with tokens from the token bag.
-
-        Args:
-        - tokenbag: An optional token bag to fill the board with tokens.
-        """
         for current_position in range(1, 26):
             if tokenbag.get_number_of_tokens_in_bag() > 0:
                 matches = [match for match in find_index(current_position, self.index_board)]
@@ -267,13 +218,7 @@ class Board(RelativeLayout):
         self.update_board()
 
     def update_board(self, indexes_tokens_to_choose=None, *args):
-        """
-        Update the visual appearance of the game board.
 
-        Args:
-        - indexes_tokens_to_choose: Indices of tokens available for choosing.
-        - *args: Additional arguments.
-        """
         self.clear_widgets()
         self.canvas.clear()
         self.draw_board()
@@ -362,9 +307,6 @@ class Board(RelativeLayout):
         clicked_cell = self.clicked_cells[0]
         for possible_row in range(5):
             for possible_col in range(5):
-                # If the cell it at more than one cell than the clicked one
-                # Or the cell is a Gold token
-                # Or the cell is empty
                 if (
                         abs(clicked_cell[0] - possible_row) > 1 or abs(clicked_cell[1] - possible_col) > 1 or
                         self.board_gems[possible_row][possible_col].gem_type == GemType.GOLD or
